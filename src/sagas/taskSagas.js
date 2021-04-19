@@ -22,11 +22,20 @@ export function * getAllTasksSaga (action) {
   }
 }
 
+export function * getTaskSaga (action) {
+  try {
+    console.log('action.payload in saga', action.payload);
+    const { data } = yield API.getTask(action.payload);
+    yield put(TaskActionCreators.getTaskRequest(data));
+  } catch (error) {
+    yield put(TaskActionCreators.getTaskError(error));
+  }
+}
+
 export function * deleteTaskSaga (action) {
   try {
     const { data } = yield API.deleteTask(action.payload);
     yield put(TaskActionCreators.deleteTaskSuccess(data));
-    console.log('response', response);
   } catch (error) {
     yield put(TaskActionCreators.deleteTaskError(error));
   }
@@ -34,7 +43,7 @@ export function * deleteTaskSaga (action) {
 
 export function * updateTaskSaga (action) {
   try {
-    const { data } = yield API.updateTask(action);
+    const { data } = yield API.updateTask(action.payload);
     yield put(TaskActionCreators.updateTaskSuccess(data));
   } catch (error) {
     yield put(TaskActionCreators.updateTaskError(error));

@@ -6,46 +6,34 @@ const initialState = {
   tasks: [],
 };
 
+const requestActionTemplate = (state, action) => {
+  return {
+    ...state,
+    isFetching: true,
+  };
+};
+
+const errorActionTemplate = (state, action) => {
+  const {
+    payload: { error },
+  } = action;
+  return {
+    ...state,
+    isFetching: false,
+    error,
+  };
+};
+
 const taskReducer = (state = initialState, action) => {
   switch (action.type) {
-    // case ACTION_TYPES.CREATE_TASK: {
-    //   const { tasks } = state;
-    //   const { values } = action;
-    //   return {
-    //     ...state,
-    //     tasks: [...tasks, { ...values }],
-    //   };
-    // }
-    // case ACTION_TYPES.UPDATE_TASK: {
-    //   const { id, values } = action;
-    //   const { tasks } = state;
-    //   const newTasks = [...tasks];
-    //   const updatedTask = { ...newTasks[id], ...values };
-    //   newTasks[id] = updatedTask;
-    //   return {
-    //     ...state,
-    //     tasks: newTasks,
-    //   };
-    // }
-    // case ACTION_TYPES.DELETE_TASK: {
-    //   const { id } = action;
-    //   const { tasks } = state;
-    //   const newTasks = tasks.filter(task => task.id !== id);
-    //   return {
-    //     ...state,
-    //     tasks: newTasks,
-    //   };
-    // }
-
+    // CREATE_TASK
     case ACTION_TYPES.CREATE_TASK_REQUEST: {
-      // const { values } = action;
-      return {
-        ...state,
-        isFetching: true,
-      };
+      return requestActionTemplate(state, action);
     }
     case ACTION_TYPES.CREATE_TASK_SUCCESS: {
-      const { values: task } = action;
+      const {
+        payload: { data: task },
+      } = action;
       return {
         ...state,
         isFetching: false,
@@ -54,35 +42,37 @@ const taskReducer = (state = initialState, action) => {
       };
     }
     case ACTION_TYPES.CREATE_TASK_ERROR: {
-      const { error } = action;
+      const {
+        payload: {
+          error: { message },
+        },
+      } = action;
       return {
         ...state,
         isFetching: false,
-        error,
+        error: message,
       };
     }
 
+    // GET ALL TASKS
     case ACTION_TYPES.GET_ALL_TASKS_REQUEST: {
-      return {
-        ...state,
-        isFetching: true,
-      };
+      return requestActionTemplate(state, action);
     }
     case ACTION_TYPES.GET_ALL_TASKS_SUCCESS: {
       const {
-        values: { data: newTasks, ...rest },
+        payload: { data: tasks, pagination },
       } = action;
-      const { tasks } = state;
-      const pagination = { ...rest };
       return {
         ...state,
-        tasks: [...tasks, ...newTasks],
-        isFetching: true,
+        tasks: [...state.tasks, ...tasks],
+        isFetching: false,
         pagination,
       };
     }
     case ACTION_TYPES.GET_ALL_TASKS_ERROR: {
-      const { error } = action;
+      const {
+        payload: { error },
+      } = action;
       return {
         ...state,
         isFetching: false,
@@ -90,12 +80,32 @@ const taskReducer = (state = initialState, action) => {
       };
     }
 
-    case ACTION_TYPES.DELETE_TASK_REQUEST: {
-      console.log('action', action);
+    // GET TASK
+    case ACTION_TYPES.GET_TASK_REQUEST: {
+      console.log('action req data = ', action);
       return {
         ...state,
         isFetching: true,
       };
+    }
+    case ACTION_TYPES.GET_TASK_SUCCESS: {
+      const { tasks } = state;
+      // const { payload } = action;
+      console.log('action success', action);
+      console.log('state', state);
+      return {
+        ...state,
+        tasks: [...tasks],
+        isFetching: false,
+      };
+    }
+    case ACTION_TYPES.GET_TASK_ERROR: {
+      return errorActionTemplate(state, action);
+    }
+
+    // DELETE TASK
+    case ACTION_TYPES.DELETE_TASK_REQUEST: {
+      return requestActionTemplate(state, action);
     }
     case ACTION_TYPES.DELETE_TASK_SUCCESS: {
       const { tasks } = state;
@@ -119,6 +129,27 @@ const taskReducer = (state = initialState, action) => {
         isFetching: false,
         error,
       };
+    }
+
+    // UPDATE TASK
+    case ACTION_TYPES.UPDATE_TASK_REQUEST: {
+      return requestActionTemplate(state, action);
+    }
+    case ACTION_TYPES.UPDATE_TASK_SUCCESS: {
+      console.log('state', state);
+      const {
+        payload: { data: tasks },
+      } = action;
+      console.log('action', action);
+      return {
+        ...state,
+        tasks: [...tasks],
+        isFetching: false,
+        error: null,
+      };
+    }
+    case ACTION_TYPES.UPDATE_TASK_ERROR: {
+      return errorActionTemplate(state, action);
     }
 
     default:

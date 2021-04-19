@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Route, Switch } from 'react-router-dom';
 
 const Home = lazy(() => import('./pages/Home.jsx'));
 const Todo = lazy(() => import('./pages/Todo.jsx'));
+const TaskPage = lazy(() => import('./pages/Task.jsx'));
 
 const App = props => {
   return (
@@ -20,6 +21,7 @@ const App = props => {
       <Suspense fallback={'Loading...'}>
         <Switch>
           <Route exact path='/' component={Home} />
+          <Route path='/tasks/:taskId' component={TaskPage} />
           <Route path='/tasks' component={Todo} />
         </Switch>
       </Suspense>
