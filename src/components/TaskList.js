@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import * as TaskCreators from '../actions/taskCreators';
 import qs from 'query-string';
 import Task from './Task';
+import Pagination from './pagination/Pagination';
 
 const TaskList = props => {
   const {
@@ -41,14 +42,7 @@ const TaskList = props => {
         ))}
       </ul>
       {pagination && (
-        <div>
-          <h4>Pagination info:</h4>
-          <p>Current page: {pagination?.currentPage}</p>
-          <p>Tasks on page: {tasks?.length}</p>
-          <p>Pages: {pagination?.pagesCount}</p>
-          <p>Page size: {pagination?.pageSize}</p>
-          <p>Tasks total: {pagination?.tasksCount}</p>
-        </div>
+        <Pagination tasks={tasks} pagination={pagination} />
       )}
     </div>
   );

@@ -64,7 +64,7 @@ const taskReducer = (state = initialState, action) => {
       } = action;
       return {
         ...state,
-        tasks: [...state.tasks, ...tasks],
+        tasks: [...tasks],
         isFetching: false,
         pagination,
       };
