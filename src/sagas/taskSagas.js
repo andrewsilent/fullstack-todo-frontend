@@ -5,11 +5,9 @@ import * as TaskActionCreators from '../actions/taskCreators';
 export function * createTaskSaga (action) {
   try {
     const {
-      data: {
-        data: [task],
-      },
-    } = yield API.createTask(action.values);
-    yield put(TaskActionCreators.createTaskSuccess(task));
+      data: { data },
+    } = yield API.createTask(action.payload);
+    yield put(TaskActionCreators.createTaskSuccess(data));
   } catch (error) {
     yield put(TaskActionCreators.createTaskError(error));
   }
@@ -17,7 +15,7 @@ export function * createTaskSaga (action) {
 
 export function * getAllTasksSaga (action) {
   try {
-    const { data } = yield API.getAllTasks(action);
+    const { data } = yield API.getAllTasks(action.payload);
     yield put(TaskActionCreators.getAllTasksSuccess(data));
   } catch (error) {
     yield put(TaskActionCreators.getAllTasksError(error));
@@ -26,8 +24,7 @@ export function * getAllTasksSaga (action) {
 
 export function * deleteTaskSaga (action) {
   try {
-    const response = yield API.deleteTask(action);
-    const { data } = response;
+    const { data } = yield API.deleteTask(action.payload);
     yield put(TaskActionCreators.deleteTaskSuccess(data));
     console.log('response', response);
   } catch (error) {

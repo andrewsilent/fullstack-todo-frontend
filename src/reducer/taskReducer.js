@@ -99,15 +99,21 @@ const taskReducer = (state = initialState, action) => {
     }
     case ACTION_TYPES.DELETE_TASK_SUCCESS: {
       const { tasks } = state;
+      const {
+        payload: { message },
+      } = action;
       return {
         ...state,
         tasks: [...tasks],
+        message: message,
         error: null,
         isFetching: false,
       };
     }
     case ACTION_TYPES.DELETE_TASK_ERROR: {
-      const { error } = action;
+      const {
+        payload: { error },
+      } = action;
       return {
         ...state,
         isFetching: false,

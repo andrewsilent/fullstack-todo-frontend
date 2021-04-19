@@ -1,21 +1,12 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
-import * as ActionCreators from '../actions';
+import React from 'react';
 
 const Home = props => {
-  const { pageTitle, welcome, pageData } = props;
-  useEffect(() => pageData(), []);
   return (
     <div>
-      <h1>{pageTitle}</h1>
-      <p>{welcome}</p>
+      <h1>Home page</h1>
+      <p>Welcome message! Greetings, you are right now right here</p>
     </div>
   );
 };
 
-const mapStateToProps = ({ pageReducer }) => ({ ...pageReducer });
-const mapDispatchToProps = dispatch => ({
-  pageData: () => dispatch(ActionCreators.homepageData()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

@@ -1,19 +1,33 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation } from 'react-router';
+import { bindActionCreators } from 'redux';
 import * as TaskCreators from '../actions/taskCreators';
+import qs from 'query-string';
+import Task from './Task';
 
 const TaskList = props => {
   const {
     taskReducer: { tasks, pagination },
-    getAllTasks,
-    updateTask,
-    deleteTask,
     isFetching,
     error,
-  } = props;
-  useEffect(() => {
-    getAllTasks();
-  }, []);
+  } = useSelector(state => state);
+
+  const location = useLocation();
+  const [query, setQuery] = useState(qs.parse(location.search));
+
+  const dispatch = useDispatch();
+
+  const {
+    getAllTasksRequest,
+    getTaskRequest,
+    updateTaskRequest,
+    deleteTaskRequest,
+  } = bindActionCreators(TaskCreators, dispatch);
+
+  useEffect(() => setQuery(qs.parse(location.search)), [location.search]);
+  useEffect(() => getAllTasksRequest(query), [query]);
+
   return (
     <div>
       <h2>Your tasks:</h2>
@@ -22,42 +36,22 @@ const TaskList = props => {
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
-            <h3>Task ID: {task.id}</h3>
-            <p>{task.body}</p>
-            <p>{`${new Date(task.deadline)}`}</p>
-            <input
-              type='checkbox'
-              checked={task.isDone}
-              onChange={({ target: { checked } }) => {
-                updateTask({
-                  id: task.id,
-                  values: {
-                    isDone: checked,
-                  },
-                });
-              }}
-            />
-            <button onClick={() => deleteTask(task.id)}>Delete task</button>
+            <Task task={task} getTaskRequest={getTaskRequest} updateTaskRequest={updateTaskRequest} deleteTaskRequest={deleteTaskRequest} />
           </li>
         ))}
       </ul>
-      <div>
-        <h4>Pagination info:</h4>
-        <p>Current page: {pagination?.currentPage}</p>
-        <p>Pages: {pagination?.pagesCount}</p>
-        <p>Page size: {pagination?.pageSize}</p>
-        <p>Tasks: {pagination?.tasksCount}</p>
-      </div>
+      {pagination && (
+        <div>
+          <h4>Pagination info:</h4>
+          <p>Current page: {pagination?.currentPage}</p>
+          <p>Tasks on page: {tasks?.length}</p>
+          <p>Pages: {pagination?.pagesCount}</p>
+          <p>Page size: {pagination?.pageSize}</p>
+          <p>Tasks total: {pagination?.tasksCount}</p>
+        </div>
+      )}
     </div>
   );
 };
 
-const mapStateToProps = state => state;
-const mapDispatchToProps = dispatch => ({
-  getAllTasks: () => dispatch(TaskCreators.getAllTasksRequest()),
-  deleteTask: id => dispatch(TaskCreators.deleteTaskRequest(id)),
-  updateTask: ({ id, values }) =>
-    dispatch(TaskCreators.updateTaskRequest({ id, values })),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
+export default TaskList;
