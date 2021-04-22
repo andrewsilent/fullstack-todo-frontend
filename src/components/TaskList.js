@@ -37,13 +37,16 @@ const TaskList = props => {
       <ul>
         {tasks.map(task => (
           <li key={task.id}>
-            <Task task={task} getTaskRequest={getTaskRequest} updateTaskRequest={updateTaskRequest} deleteTaskRequest={deleteTaskRequest} />
+            <Task
+              task={task}
+              getTaskRequest={getTaskRequest}
+              updateTaskRequest={updateTaskRequest}
+              deleteTaskRequest={deleteTaskRequest}
+            />
           </li>
         ))}
       </ul>
-      {pagination && (
-        <Pagination tasks={tasks} pagination={pagination} />
-      )}
+      {pagination && <Pagination tasks={tasks} pagination={pagination} />}
     </div>
   );
 };

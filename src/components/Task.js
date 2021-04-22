@@ -13,13 +13,13 @@ const Task = props => {
     <div>
       <h3>Task ID: {task.id}</h3>
       <p>{task.body}</p>
-      <p>{`${new Date(task.deadline)}`}</p>
+      <p>{`${new Date(task.deadline).toDateString()}`}</p>
       <input
         type='checkbox'
         checked={task.isDone}
         onChange={({ target: { checked } }) => {
           updateTaskRequest({
-            id: task.id,
+            taskId: task.id,
             values: {
               isDone: checked,
             },

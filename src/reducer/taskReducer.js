@@ -82,20 +82,16 @@ const taskReducer = (state = initialState, action) => {
 
     // GET TASK
     case ACTION_TYPES.GET_TASK_REQUEST: {
-      console.log('action req data = ', action);
-      return {
-        ...state,
-        isFetching: true,
-      };
+      return requestActionTemplate(state, action);
     }
     case ACTION_TYPES.GET_TASK_SUCCESS: {
       const { tasks } = state;
-      // const { payload } = action;
-      console.log('action success', action);
-      console.log('state', state);
+      const {
+        payload: { data: newTasks },
+      } = action;
       return {
         ...state,
-        tasks: [...tasks],
+        tasks: [...newTasks],
         isFetching: false,
       };
     }
@@ -136,14 +132,16 @@ const taskReducer = (state = initialState, action) => {
       return requestActionTemplate(state, action);
     }
     case ACTION_TYPES.UPDATE_TASK_SUCCESS: {
-      console.log('state', state);
+      const { tasks } = state;
       const {
-        payload: { data: tasks },
+        payload: { data: newTask },
       } = action;
-      console.log('action', action);
+      const newTasks = tasks.map(task =>
+        task.id === newTask.id ? newTask : task,
+      );
       return {
         ...state,
-        tasks: [...tasks],
+        tasks: newTasks,
         isFetching: false,
         error: null,
       };
