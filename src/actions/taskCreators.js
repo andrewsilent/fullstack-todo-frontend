@@ -30,9 +30,9 @@ export const getTaskRequest = taskId => ({
   type: ACTION_TYPES.GET_TASK_REQUEST,
   payload: { taskId },
 });
-export const getTaskSuccess = values => ({
+export const getTaskSuccess = data => ({
   type: ACTION_TYPES.GET_TASK_SUCCESS,
-  payload: { ...values },
+  payload: { data },
 });
 export const getTaskError = error => ({
   type: ACTION_TYPES.GET_TASK_ERROR,

@@ -85,10 +85,10 @@ const taskReducer = (state = initialState, action) => {
       return requestActionTemplate(state, action);
     }
     case ACTION_TYPES.GET_TASK_SUCCESS: {
-      const { tasks } = state;
       const {
         payload: { data: newTasks },
       } = action;
+      console.log('get task success action', action);
       return {
         ...state,
         tasks: [...newTasks],
@@ -96,6 +96,7 @@ const taskReducer = (state = initialState, action) => {
       };
     }
     case ACTION_TYPES.GET_TASK_ERROR: {
+      console.log('get task err action', action);
       return errorActionTemplate(state, action);
     }
 

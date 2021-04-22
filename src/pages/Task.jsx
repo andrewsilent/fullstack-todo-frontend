@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Task from '../components/Task';
 import * as TaskCreators from '../actions/taskCreators';
+import { useParams } from 'react-router';
 
 const TaskPage = props => {
-  const state = useSelector(state => state);
-  console.log('state', state);
+  const { taskId } = useParams();
+  console.log('taskId from params', taskId);
 
   const {
     taskReducer: { tasks },
@@ -16,10 +17,15 @@ const TaskPage = props => {
 
   const dispatch = useDispatch();
 
-  const { updateTaskRequest, deleteTaskRequest } = bindActionCreators(
-    TaskCreators,
-    dispatch,
-  );
+  const {
+    getTaskRequest,
+    updateTaskRequest,
+    deleteTaskRequest,
+  } = bindActionCreators(TaskCreators, dispatch);
+
+  useEffect(() => {
+    getTaskRequest(taskId);
+  }, []);
 
   return (
     <>
@@ -29,6 +35,7 @@ const TaskPage = props => {
       <Task
         task={tasks}
         isReadMore={true}
+        getTaskRequest={() => getTaskRequest()}
         updateTaskRequest={() => updateTaskRequest()}
         deleteTaskRequest={() => deleteTaskRequest()}
       />

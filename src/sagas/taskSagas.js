@@ -25,7 +25,10 @@ export function * getAllTasksSaga (action) {
 export function * getTaskSaga (action) {
   try {
     console.log('action.payload in saga', action.payload);
-    const { data } = yield API.getTask(action.payload);
+    const {
+      data: { data },
+    } = yield API.getTask(action.payload);
+    console.log('data in saga', data);
     yield put(TaskActionCreators.getTaskRequest(data));
   } catch (error) {
     yield put(TaskActionCreators.getTaskError(error));

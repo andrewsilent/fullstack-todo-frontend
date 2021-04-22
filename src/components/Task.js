@@ -1,13 +1,7 @@
 import React from 'react';
 
 const Task = props => {
-  const {
-    task,
-    getTaskRequest,
-    updateTaskRequest,
-    deleteTaskRequest,
-    isReadMore,
-  } = props;
+  const { task, updateTaskRequest, deleteTaskRequest, isReadMore } = props;
 
   return (
     <div>
@@ -26,11 +20,7 @@ const Task = props => {
           });
         }}
       />
-      {!isReadMore && (
-        <a href={`/tasks/${task.id}`} onClick={() => getTaskRequest(task.id)}>
-          Read more
-        </a>
-      )}
+      {!isReadMore && <a href={`/tasks/${task.id}`}>Read more</a>}
       <button onClick={() => deleteTaskRequest(task.id)}>Delete task</button>
     </div>
   );
